@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alfabetilar — exemplo do painel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  /* Paleta e tipografia extraidas da propria pagina do Alfabetilar (04/10/2026):
+     verde #24382A, cremes #FDF9ED/#F2EADB, dourados #DCA847/#C68F39,
+     marrons #4A3524/#6B5A45, Cormorant Garamond + Lora.
+     A rampa das barras e sequencial de um tom, validada (ver comentario no .py). */
+  :root {
+    --verde:#24382a; --verde-esc:#1b2a20; --verde-cl:#4a5a38;
+    --papel:#fdf9ed; --creme:#f2eadb; --creme-esc:#efede3;
+    --ouro:#dca847; --ouro-esc:#c68f39;
+    --tinta:#4a3524; --tinta-cl:#6b5a45;
+    --borda:#e7e3d8;
+  }
+  * { box-sizing:border-box; }
+  body { background:var(--creme); color:var(--tinta); margin:0;
+    padding:24px 14px 36px;
+    font:16px/1.55 Lora,Georgia,"Times New Roman",serif;
+    -webkit-text-size-adjust:100%; }
+  main { max-width:720px; margin:0 auto; }
+
+  /* Cabecalho */
+  header { margin:0 0 20px; }
+  .selo { font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--verde-cl); margin:0 0 8px; }
+  h1 { font-family:"Cormorant Garamond",Georgia,serif; font-weight:600;
+    font-size:clamp(28px,5vw,38px); line-height:1.06; color:var(--verde);
+    margin:0 0 5px; letter-spacing:-.005em; }
+  .ts { font-size:13.5px; font-style:italic; color:var(--tinta-cl); margin:0; }
+
+  /* Faixa de numeros */
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+    margin:0 0 26px; }
+  .kpi { background:var(--papel); border:1px solid var(--borda);
+    border-radius:3px; padding:14px 14px 12px; min-width:0; }
+  .destaque-kpi { background:var(--verde); border-color:var(--verde); }
+  .destaque-kpi .n-grande { color:var(--papel); }
+  .destaque-kpi .rot { color:rgba(253,249,237,.74); }
+  .n-grande { display:block; font-family:"Cormorant Garamond",Georgia,serif;
+    font-weight:600; font-size:clamp(21px,3.3vw,29px); line-height:1.02;
+    color:var(--verde); font-variant-numeric:tabular-nums;
+    overflow-wrap:anywhere; }
+  .rot { display:block; margin-top:5px; font-size:10.5px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--tinta-cl); line-height:1.25; }
+
+  /* Paineis */
+  .painel { background:var(--papel); border:1px solid var(--borda);
+    border-radius:3px; padding:20px clamp(14px,2.6vw,22px) 16px;
+    margin:0 0 16px;
+    box-shadow:2px 3px 0 0 var(--ouro), 4px 6px 0 0 var(--ouro-esc); }
+  h2 { font-family:"Cormorant Garamond",Georgia,serif; font-weight:600;
+    font-size:clamp(19px,2.9vw,24px); line-height:1.14; color:var(--verde);
+    margin:0 0 4px; }
+  .nota { font-size:13.5px; line-height:1.5; color:var(--tinta-cl);
+    margin:0 0 18px; }
+
+  /* Grafico de barras */
+  .grafico { display:flex; flex-direction:column; gap:2px; }
+  .linha { display:grid;
+    grid-template-columns:minmax(96px,30%) 1fr 40px 46px;
+    align-items:center; gap:10px; padding:5px 0; border-radius:2px;
+    outline:none; }
+  .linha:hover, .linha:focus-visible { background:rgba(242,234,219,.6); }
+  .linha:focus-visible { box-shadow:0 0 0 2px var(--ouro); }
+  .rotulo { font-size:13.5px; color:var(--verde); line-height:1.25;
+    overflow-wrap:anywhere; }
+  .trilha { position:relative; display:block; height:18px;
+    background:var(--creme-esc); border-radius:2px; }
+  .barra { display:block; height:100%; min-width:3px;
+    border-radius:0 4px 4px 0; transition:width .4s ease; }
+  .valor { text-align:right; font-size:14.5px; color:var(--verde);
+    font-variant-numeric:tabular-nums; }
+  .parte { text-align:right; font-size:13px; color:var(--tinta-cl);
+    font-variant-numeric:tabular-nums; }
+
+  /* Tooltip no hover */
+  .dica { position:absolute; left:0; bottom:calc(100% + 7px); z-index:5;
+    background:var(--verde-esc); color:var(--papel);
+    font-size:12.5px; line-height:1.4; font-style:normal;
+    padding:7px 10px; border-radius:3px; white-space:normal; width:max-content;
+    max-width:min(280px,76vw);
+    opacity:0; visibility:hidden; transform:translateY(3px);
+    transition:opacity .15s ease, transform .15s ease, visibility .15s;
+    box-shadow:0 3px 10px rgba(27,42,32,.26); pointer-events:none; }
+  .linha:hover .dica, .linha:focus-visible .dica {
+    opacity:1; visibility:visible; transform:translateY(0); }
+
+  /* Tabela (acessibilidade / conferencia) */
+  .tabela { margin:16px 0 0; border-top:1px solid var(--borda);
+    padding-top:12px; }
+  .tabela summary { font-size:12.5px; letter-spacing:.04em; color:var(--verde-cl);
+    cursor:pointer; list-style:none; }
+  .tabela summary::-webkit-details-marker { display:none; }
+  .tabela summary::before { content:"▸ "; }
+  .tabela[open] summary::before { content:"▾ "; }
+  table { width:100%; border-collapse:collapse; font-size:14px;
+    margin-top:12px; }
+  th,td { padding:8px 8px; text-align:left;
+    border-bottom:1px solid var(--borda); }
+  thead th { background:var(--creme); font-size:10.5px; text-transform:uppercase;
+    letter-spacing:.1em; color:var(--verde-cl);
+    border-bottom:1px solid var(--ouro); }
+  .n { text-align:right; font-variant-numeric:tabular-nums; }
+  tbody td:first-child { color:var(--verde); }
+  tfoot td { font-weight:500; color:var(--verde); border-bottom:none;
+    border-top:2px solid var(--verde); }
+
+  /* Vazio */
+  .vazio { background:var(--papel); border:1px solid var(--borda);
+    border-radius:3px; padding:28px 22px; margin:0; text-align:center;
+    font-style:italic; color:var(--tinta-cl); }
+  .vazio-sub { display:inline-block; margin-top:8px; font-size:13.5px;
+    font-style:normal; }
+
+  @media (max-width:560px) {
+    .kpis { grid-template-columns:repeat(2,1fr); }
+    .linha { grid-template-columns:minmax(78px,36%) 1fr 34px 42px; gap:8px; }
+    .painel { box-shadow:1px 2px 0 0 var(--ouro), 2px 4px 0 0 var(--ouro-esc); }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    .barra, .dica { transition:none; }
+  }
+
+  .aviso { background:#fff4d6; border:1px solid #dca847; border-left:4px solid #c68f39;
+    border-radius:3px; padding:12px 14px; margin:0 0 20px; font-size:13.5px;
+    line-height:1.5; color:#5a4420; }
+  .aviso b { color:#3d2010; }
+</style></head>
+<body>
+<main>
+  <header>
+    <p class="selo">Arquivo Homeschooling</p>
+    <h1>Alfabetilar · origem das vendas</h1>
+    <p class="ts">Últimos 3 dias · atualizado em 04/10/2026 às 20:27</p>
+  </header>
+  <div class="aviso"><b>Exemplo de demonstração.</b> Os números desta página são fictícios, só para mostrar o formato. O Alfabetilar ainda não teve vendas — o painel real começa a preencher quando a primeira compra entrar.</div>
+  
+    <div class="kpis">
+      <div class="kpi destaque-kpi">
+        <span class="n-grande">R$ 2.522,00</span>
+        <span class="rot">faturamento</span>
+      </div>
+      <div class="kpi">
+        <span class="n-grande">26</span>
+        <span class="rot">vendas</span>
+      </div>
+      <div class="kpi">
+        <span class="n-grande">R$ 97,00</span>
+        <span class="rot">ticket médio</span>
+      </div>
+      <div class="kpi">
+        <span class="n-grande">65,4%</span>
+        <span class="rot">WhatsApp clientes</span>
+      </div>
+    </div>
+    <section class="painel">
+      <h2>Por onde conheceu a oferta</h2>
+      <p class="nota">Primeiro contato da pessoa com o lançamento. É a resposta para “de onde veio a venda”.</p>
+      <div class="grafico">
+        <div class="linha" tabindex="0" aria-label="WhatsApp clientes · 17 vendas · R$ 1.649,00 · 65,4% do total">
+          <span class="rotulo">WhatsApp clientes</span>
+          <span class="trilha">
+            <span class="barra" style="width:100.0%;background:#1b2a20"></span>
+            <span class="dica" role="tooltip">WhatsApp clientes · 17 vendas · R$ 1.649,00 · 65,4% do total</span>
+          </span>
+          <span class="valor">17</span>
+          <span class="parte">65,4%</span>
+        </div>
+        <div class="linha" tabindex="0" aria-label="E-mail · 6 vendas · R$ 582,00 · 23,1% do total">
+          <span class="rotulo">E-mail</span>
+          <span class="trilha">
+            <span class="barra" style="width:35.3%;background:#334a30"></span>
+            <span class="dica" role="tooltip">E-mail · 6 vendas · R$ 582,00 · 23,1% do total</span>
+          </span>
+          <span class="valor">6</span>
+          <span class="parte">23,1%</span>
+        </div>
+        <div class="linha" tabindex="0" aria-label="WhatsApp leads · 2 vendas · R$ 194,00 · 7,7% do total">
+          <span class="rotulo">WhatsApp leads</span>
+          <span class="trilha">
+            <span class="barra" style="width:11.8%;background:#55683e"></span>
+            <span class="dica" role="tooltip">WhatsApp leads · 2 vendas · R$ 194,00 · 7,7% do total</span>
+          </span>
+          <span class="valor">2</span>
+          <span class="parte">7,7%</span>
+        </div>
+        <div class="linha" tabindex="0" aria-label="Sem origem · 1 venda · R$ 97,00 · 3,8% do total">
+          <span class="rotulo">Sem origem</span>
+          <span class="trilha">
+            <span class="barra" style="width:5.9%;background:#7d8f60"></span>
+            <span class="dica" role="tooltip">Sem origem · 1 venda · R$ 97,00 · 3,8% do total</span>
+          </span>
+          <span class="valor">1</span>
+          <span class="parte">3,8%</span>
+        </div></div>
+      <details class="tabela">
+        <summary>Ver como tabela</summary>
+        <table>
+          <thead><tr><th>Canal</th><th class="n">Vendas</th>
+          <th class="n">Valor</th><th class="n">%</th></tr></thead>
+          <tbody><tr><td>WhatsApp clientes</td><td class="n">17</td><td class="n">R$ 1.649,00</td><td class="n">65,4%</td></tr><tr><td>E-mail</td><td class="n">6</td><td class="n">R$ 582,00</td><td class="n">23,1%</td></tr><tr><td>WhatsApp leads</td><td class="n">2</td><td class="n">R$ 194,00</td><td class="n">7,7%</td></tr><tr><td>Sem origem</td><td class="n">1</td><td class="n">R$ 97,00</td><td class="n">3,8%</td></tr></tbody>
+          <tfoot><tr><td>Total</td><td class="n">26</td>
+          <td class="n">R$ 2.522,00</td>
+          <td class="n">100,0%</td></tr></tfoot>
+        </table>
+      </details>
+    </section>
+    <section class="painel">
+      <h2>Por onde entrou para comprar</h2>
+      <p class="nota">O canal da visita em que a compra aconteceu. Pode ser diferente do primeiro contato — por exemplo, clicou no WhatsApp e voltou pela bio.</p>
+      <div class="grafico">
+        <div class="linha" tabindex="0" aria-label="WhatsApp clientes · 14 vendas · R$ 1.358,00 · 53,8% do total">
+          <span class="rotulo">WhatsApp clientes</span>
+          <span class="trilha">
+            <span class="barra" style="width:100.0%;background:#1b2a20"></span>
+            <span class="dica" role="tooltip">WhatsApp clientes · 14 vendas · R$ 1.358,00 · 53,8% do total</span>
+          </span>
+          <span class="valor">14</span>
+          <span class="parte">53,8%</span>
+        </div>
+        <div class="linha" tabindex="0" aria-label="E-mail · 6 vendas · R$ 582,00 · 23,1% do total">
+          <span class="rotulo">E-mail</span>
+          <span class="trilha">
+            <span class="barra" style="width:42.9%;background:#334a30"></span>
+            <span class="dica" role="tooltip">E-mail · 6 vendas · R$ 582,00 · 23,1% do total</span>
+          </span>
+          <span class="valor">6</span>
+          <span class="parte">23,1%</span>
+        </div>
+        <div class="linha" tabindex="0" aria-label="Navegação interna · 3 vendas · R$ 291,00 · 11,5% do total">
+          <span class="rotulo">Navegação interna</span>
+          <span class="trilha">
+            <span class="barra" style="width:21.4%;background:#55683e"></span>
+            <span class="dica" role="tooltip">Navegação interna · 3 vendas · R$ 291,00 · 11,5% do total</span>
+          </span>
+          <span class="valor">3</span>
+          <span class="parte">11,5%</span>
+        </div>
+        <div class="linha" tabindex="0" aria-label="WhatsApp leads · 2 vendas · R$ 194,00 · 7,7% do total">
+          <span class="rotulo">WhatsApp leads</span>
+          <span class="trilha">
+            <span class="barra" style="width:14.3%;background:#7d8f60"></span>
+            <span class="dica" role="tooltip">WhatsApp leads · 2 vendas · R$ 194,00 · 7,7% do total</span>
+          </span>
+          <span class="valor">2</span>
+          <span class="parte">7,7%</span>
+        </div>
+        <div class="linha" tabindex="0" aria-label="Sem origem · 1 venda · R$ 97,00 · 3,8% do total">
+          <span class="rotulo">Sem origem</span>
+          <span class="trilha">
+            <span class="barra" style="width:7.1%;background:#a8b492"></span>
+            <span class="dica" role="tooltip">Sem origem · 1 venda · R$ 97,00 · 3,8% do total</span>
+          </span>
+          <span class="valor">1</span>
+          <span class="parte">3,8%</span>
+        </div></div>
+      <details class="tabela">
+        <summary>Ver como tabela</summary>
+        <table>
+          <thead><tr><th>Canal</th><th class="n">Vendas</th>
+          <th class="n">Valor</th><th class="n">%</th></tr></thead>
+          <tbody><tr><td>WhatsApp clientes</td><td class="n">14</td><td class="n">R$ 1.358,00</td><td class="n">53,8%</td></tr><tr><td>E-mail</td><td class="n">6</td><td class="n">R$ 582,00</td><td class="n">23,1%</td></tr><tr><td>Navegação interna</td><td class="n">3</td><td class="n">R$ 291,00</td><td class="n">11,5%</td></tr><tr><td>WhatsApp leads</td><td class="n">2</td><td class="n">R$ 194,00</td><td class="n">7,7%</td></tr><tr><td>Sem origem</td><td class="n">1</td><td class="n">R$ 97,00</td><td class="n">3,8%</td></tr></tbody>
+          <tfoot><tr><td>Total</td><td class="n">26</td>
+          <td class="n">R$ 2.522,00</td>
+          <td class="n">100,0%</td></tr></tfoot>
+        </table>
+      </details>
+    </section>
+</main>
+</body></html>
