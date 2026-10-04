@@ -4,74 +4,138 @@
 <title>Alfabetilar — origem das vendas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-  /* Paleta extraida da propria pagina do Alfabetilar (04/10/2026).
-     Verde-escuro #24382A, creme #F2EADB/#FBF5EA, dourado #DCA847/#C68F39,
-     marrom #4A3524/#6B5A45. Tipografia: Cormorant Garamond + Lora. */
+  /* Paleta e tipografia extraidas da propria pagina do Alfabetilar (04/10/2026):
+     verde #24382A, cremes #FDF9ED/#F2EADB, dourados #DCA847/#C68F39,
+     marrons #4A3524/#6B5A45, Cormorant Garamond + Lora.
+     A rampa das barras e sequencial de um tom, validada (ver comentario no .py). */
   :root {
-    --verde:#24382a; --verde-esc:#1b2a20; --verde-claro:#4a5a38;
-    --creme:#fbf5ea; --creme-md:#f2eadb; --creme-esc:#efede3;
+    --verde:#24382a; --verde-esc:#1b2a20; --verde-cl:#4a5a38;
+    --papel:#fdf9ed; --creme:#f2eadb; --creme-esc:#efede3;
     --ouro:#dca847; --ouro-esc:#c68f39;
-    --marrom:#4a3524; --marrom-cl:#6b5a45;
-    --papel:#fdf9ed; --borda:#e7e3d8;
+    --tinta:#4a3524; --tinta-cl:#6b5a45;
+    --borda:#e7e3d8;
   }
   * { box-sizing:border-box; }
-  body { background:var(--creme-md); color:var(--marrom); margin:0;
-    padding:28px 16px 40px;
-    font:16px/1.6 Lora,Georgia,"Times New Roman",serif; }
-  main { max-width:660px; margin:0 auto; background:var(--papel);
-    border:1px solid var(--borda); border-radius:4px;
-    box-shadow:0 1px 0 rgba(255,255,255,.7) inset, 3px 5px 0 0 var(--ouro),
-      6px 10px 0 0 var(--ouro-esc), 0 14px 30px rgba(36,56,42,.16);
-    padding:34px clamp(20px,4vw,42px) 30px; }
-  .selo { font-family:Lora,Georgia,serif; font-size:11.5px; letter-spacing:.17em;
-    text-transform:uppercase; color:var(--verde-claro); margin:0 0 10px; }
+  body { background:var(--creme); color:var(--tinta); margin:0;
+    padding:24px 14px 36px;
+    font:16px/1.55 Lora,Georgia,"Times New Roman",serif;
+    -webkit-text-size-adjust:100%; }
+  main { max-width:720px; margin:0 auto; }
+
+  /* Cabecalho */
+  header { margin:0 0 20px; }
+  .selo { font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--verde-cl); margin:0 0 8px; }
   h1 { font-family:"Cormorant Garamond",Georgia,serif; font-weight:600;
-    font-size:clamp(30px,5.2vw,42px); line-height:1.08; color:var(--verde);
-    margin:0 0 6px; letter-spacing:-.005em; }
-  .ts { font-size:14px; font-style:italic; color:var(--marrom-cl); margin:0; }
-  .orn { text-align:center; color:var(--ouro-esc); font-size:17px;
-    margin:26px 0 22px; letter-spacing:.5em; }
+    font-size:clamp(28px,5vw,38px); line-height:1.06; color:var(--verde);
+    margin:0 0 5px; letter-spacing:-.005em; }
+  .ts { font-size:13.5px; font-style:italic; color:var(--tinta-cl); margin:0; }
+
+  /* Faixa de numeros */
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+    margin:0 0 26px; }
+  .kpi { background:var(--papel); border:1px solid var(--borda);
+    border-radius:3px; padding:14px 14px 12px; min-width:0; }
+  .destaque-kpi { background:var(--verde); border-color:var(--verde); }
+  .destaque-kpi .n-grande { color:var(--papel); }
+  .destaque-kpi .rot { color:rgba(253,249,237,.74); }
+  .n-grande { display:block; font-family:"Cormorant Garamond",Georgia,serif;
+    font-weight:600; font-size:clamp(21px,3.3vw,29px); line-height:1.02;
+    color:var(--verde); font-variant-numeric:tabular-nums;
+    overflow-wrap:anywhere; }
+  .rot { display:block; margin-top:5px; font-size:10.5px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--tinta-cl); line-height:1.25; }
+
+  /* Paineis */
+  .painel { background:var(--papel); border:1px solid var(--borda);
+    border-radius:3px; padding:20px clamp(14px,2.6vw,22px) 16px;
+    margin:0 0 16px;
+    box-shadow:2px 3px 0 0 var(--ouro), 4px 6px 0 0 var(--ouro-esc); }
   h2 { font-family:"Cormorant Garamond",Georgia,serif; font-weight:600;
-    font-size:clamp(21px,3.2vw,26px); line-height:1.15; color:var(--verde);
-    margin:30px 0 4px; }
-  .nota { font-size:14.5px; line-height:1.6; color:var(--marrom-cl);
-    margin:0 0 14px; }
-  table { width:100%; border-collapse:collapse; font-size:15.5px; }
-  th,td { padding:10px 10px; text-align:left;
+    font-size:clamp(19px,2.9vw,24px); line-height:1.14; color:var(--verde);
+    margin:0 0 4px; }
+  .nota { font-size:13.5px; line-height:1.5; color:var(--tinta-cl);
+    margin:0 0 18px; }
+
+  /* Grafico de barras */
+  .grafico { display:flex; flex-direction:column; gap:2px; }
+  .linha { display:grid;
+    grid-template-columns:minmax(96px,30%) 1fr 40px 46px;
+    align-items:center; gap:10px; padding:5px 0; border-radius:2px;
+    outline:none; }
+  .linha:hover, .linha:focus-visible { background:rgba(242,234,219,.6); }
+  .linha:focus-visible { box-shadow:0 0 0 2px var(--ouro); }
+  .rotulo { font-size:13.5px; color:var(--verde); line-height:1.25;
+    overflow-wrap:anywhere; }
+  .trilha { position:relative; display:block; height:18px;
+    background:var(--creme-esc); border-radius:2px; }
+  .barra { display:block; height:100%; min-width:3px;
+    border-radius:0 4px 4px 0; transition:width .4s ease; }
+  .valor { text-align:right; font-size:14.5px; color:var(--verde);
+    font-variant-numeric:tabular-nums; }
+  .parte { text-align:right; font-size:13px; color:var(--tinta-cl);
+    font-variant-numeric:tabular-nums; }
+
+  /* Tooltip no hover */
+  .dica { position:absolute; left:0; bottom:calc(100% + 7px); z-index:5;
+    background:var(--verde-esc); color:var(--papel);
+    font-size:12.5px; line-height:1.4; font-style:normal;
+    padding:7px 10px; border-radius:3px; white-space:normal; width:max-content;
+    max-width:min(280px,76vw);
+    opacity:0; visibility:hidden; transform:translateY(3px);
+    transition:opacity .15s ease, transform .15s ease, visibility .15s;
+    box-shadow:0 3px 10px rgba(27,42,32,.26); pointer-events:none; }
+  .linha:hover .dica, .linha:focus-visible .dica {
+    opacity:1; visibility:visible; transform:translateY(0); }
+
+  /* Tabela (acessibilidade / conferencia) */
+  .tabela { margin:16px 0 0; border-top:1px solid var(--borda);
+    padding-top:12px; }
+  .tabela summary { font-size:12.5px; letter-spacing:.04em; color:var(--verde-cl);
+    cursor:pointer; list-style:none; }
+  .tabela summary::-webkit-details-marker { display:none; }
+  .tabela summary::before { content:"▸ "; }
+  .tabela[open] summary::before { content:"▾ "; }
+  table { width:100%; border-collapse:collapse; font-size:14px;
+    margin-top:12px; }
+  th,td { padding:8px 8px; text-align:left;
     border-bottom:1px solid var(--borda); }
-  thead th { background:var(--creme-md); font-family:Lora,Georgia,serif;
-    font-size:11.5px; text-transform:uppercase; letter-spacing:.12em;
-    color:var(--verde-claro); border-bottom:1px solid var(--ouro); }
-  tbody tr:nth-child(even) td { background:rgba(242,234,219,.42); }
+  thead th { background:var(--creme); font-size:10.5px; text-transform:uppercase;
+    letter-spacing:.1em; color:var(--verde-cl);
+    border-bottom:1px solid var(--ouro); }
   .n { text-align:right; font-variant-numeric:tabular-nums; }
   tbody td:first-child { color:var(--verde); }
   tfoot td { font-weight:500; color:var(--verde); border-bottom:none;
-    border-top:2px solid var(--verde); background:transparent; }
-  .destaque { display:flex; gap:14px; margin:22px 0 2px; }
-  .destaque > div { flex:1; background:var(--verde); color:var(--creme-md);
-    border-radius:3px; padding:16px 18px;
-    box-shadow:2px 3px 0 0 var(--ouro-esc); }
-  .big { display:block; font-family:"Cormorant Garamond",Georgia,serif;
-    font-weight:600; font-size:clamp(28px,4.4vw,36px); line-height:1.05;
-    font-variant-numeric:tabular-nums; }
-  .rot { display:block; font-size:11.5px; letter-spacing:.14em;
-    text-transform:uppercase; color:rgba(242,234,219,.76); margin-top:5px; }
-  .vazio { font-style:italic; color:var(--marrom-cl); margin:22px 0 0; }
-  @media (max-width:430px) {
-    .destaque { flex-direction:column; }
-    main { box-shadow:0 1px 0 rgba(255,255,255,.7) inset,
-      2px 3px 0 0 var(--ouro), 4px 6px 0 0 var(--ouro-esc),
-      0 10px 22px rgba(36,56,42,.14); }
-    th,td { padding:9px 6px; }
+    border-top:2px solid var(--verde); }
+
+  /* Vazio */
+  .vazio { background:var(--papel); border:1px solid var(--borda);
+    border-radius:3px; padding:28px 22px; margin:0; text-align:center;
+    font-style:italic; color:var(--tinta-cl); }
+  .vazio-sub { display:inline-block; margin-top:8px; font-size:13.5px;
+    font-style:normal; }
+
+  @media (max-width:560px) {
+    .kpis { grid-template-columns:repeat(2,1fr); }
+    .linha { grid-template-columns:minmax(78px,36%) 1fr 34px 42px; gap:8px; }
+    .painel { box-shadow:1px 2px 0 0 var(--ouro), 2px 4px 0 0 var(--ouro-esc); }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    .barra, .dica { transition:none; }
   }
 </style></head>
-<body><main>
-  <p class="selo">Arquivo Homeschooling · Relatório diário</p>
-  <h1>Alfabetilar<br>origem das vendas</h1>
-  <p class="ts">Últimos 7 dias · atualizado em 04/10/2026 às 20:18</p>
+<body>
+<main>
+  <header>
+    <p class="selo">Arquivo Homeschooling</p>
+    <h1>Alfabetilar · origem das vendas</h1>
+    <p class="ts">Últimos 7 dias · atualizado em 04/10/2026 às 20:27</p>
+  </header>
   
-  <div class="orn">❦</div>
-  <p class="vazio">Nenhuma venda do produto no período.</p>
-</main></body></html>
+    <p class="vazio">Nenhuma venda do produto no período.<br>
+    <span class="vazio-sub">Quando a primeira compra entrar, ela aparece aqui
+    separada por canal.</span></p>
+</main>
+</body></html>
