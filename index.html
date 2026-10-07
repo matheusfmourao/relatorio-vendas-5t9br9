@@ -67,6 +67,9 @@
     grid-template-columns:minmax(96px,30%) 1fr 40px 46px;
     align-items:center; gap:10px; padding:5px 0; border-radius:2px;
     outline:none; }
+  /* No painel de dias o rotulo e curto (05/10) e a ultima coluna leva valor
+     em reais, nao percentual — precisa de mais espaco. */
+  .linha:has(.dia) { grid-template-columns:52px 1fr 36px 92px; }
   .linha:hover, .linha:focus-visible { background:rgba(242,234,219,.6); }
   .linha:focus-visible { box-shadow:0 0 0 2px var(--ouro); }
   .rotulo { font-size:13.5px; color:var(--verde); line-height:1.25;
@@ -74,7 +77,15 @@
   .trilha { position:relative; display:block; height:18px;
     background:var(--creme-esc); border-radius:2px; }
   .barra { display:block; height:100%; min-width:3px;
-    border-radius:0 4px 4px 0; transition:width .4s ease; }
+    border-radius:0 4px 4px 0; transition:width .4s ease;
+    background:var(--verde-cl); position:relative; }
+  /* Parte da barra que veio de anuncio: passo mais escuro da mesma rampa, com
+     o gap de 2px na cor da superficie separando as duas partes. */
+  .barra-ads { position:absolute; left:0; top:0; height:100%;
+    background:var(--verde-esc); border-radius:0 2px 2px 0;
+    box-shadow:2px 0 0 0 var(--papel); }
+  .dia { font-variant-numeric:tabular-nums; }
+  .parte.val { font-size:12px; }
   .valor { text-align:right; font-size:14.5px; color:var(--verde);
     font-variant-numeric:tabular-nums; }
   .parte { text-align:right; font-size:13px; color:var(--tinta-cl);
@@ -122,6 +133,7 @@
   @media (max-width:560px) {
     .kpis { grid-template-columns:repeat(2,1fr); }
     .linha { grid-template-columns:minmax(78px,36%) 1fr 34px 42px; gap:8px; }
+    .linha:has(.dia) { grid-template-columns:46px 1fr 30px 82px; gap:7px; }
     .painel { box-shadow:1px 2px 0 0 var(--ouro), 2px 4px 0 0 var(--ouro-esc); }
   }
   @media (prefers-reduced-motion:reduce) {
@@ -133,58 +145,98 @@
   <header>
     <p class="selo">Arquivo Homeschooling</p>
     <h1>Alfabetilar · origem das vendas</h1>
-    <p class="ts">Últimos 3 dias · atualizado em 06/10/2026 às 18:48</p>
+    <p class="ts">Últimos 3 dias · atualizado em 07/10/2026 às 20:09</p>
   </header>
   
     <div class="kpis">
       <div class="kpi destaque-kpi">
-        <span class="n-grande">R$ 41.560,72</span>
+        <span class="n-grande">R$ 44.595,82</span>
         <span class="rot">faturamento em real</span>
-        <span class="rot-extra">+ USD 252,00 + EUR 92,25 + AUD 132,00 em 5 vendas fora do Brasil</span>
+        <span class="rot-extra">+ USD 336,00 + EUR 183,00 + AUD 132,00 + GBP 76,80 em 8 vendas fora do Brasil</span>
       </div>
       <div class="kpi">
-        <span class="n-grande">102</span>
+        <span class="n-grande">112</span>
         <span class="rot">vendas</span>
       </div>
       <div class="kpi">
-        <span class="n-grande">98,0%</span>
+        <span class="n-grande">98,2%</span>
         <span class="rot">com origem</span>
       </div>
       <div class="kpi">
-        <span class="n-grande">98,0%</span>
+        <span class="n-grande">98,2%</span>
         <span class="rot">WhatsApp clientes MED</span>
       </div>
     </div>
     <section class="painel">
+      <h2>Dia a dia</h2>
+      <p class="nota">Vendas por dia, no horário de Brasília. Quando o anúncio começar a vender, a parte dele aparece destacada dentro da barra.</p>
+      <div class="grafico">
+        <div class="linha" tabindex="0" aria-label="05/10 · 89 vendas · R$ 36.409,80 · média R$ 428,35">
+          <span class="rotulo dia">05/10</span>
+          <span class="trilha">
+            <span class="barra" style="width:100.0%"></span>
+            <span class="dica" role="tooltip">05/10 · 89 vendas · R$ 36.409,80 · média R$ 428,35</span>
+          </span>
+          <span class="valor">89</span>
+          <span class="parte val">R$ 36.409,80</span>
+        </div>
+        <div class="linha" tabindex="0" aria-label="06/10 · 15 vendas · R$ 6.020,62 · média R$ 430,04">
+          <span class="rotulo dia">06/10</span>
+          <span class="trilha">
+            <span class="barra" style="width:16.9%"></span>
+            <span class="dica" role="tooltip">06/10 · 15 vendas · R$ 6.020,62 · média R$ 430,04</span>
+          </span>
+          <span class="valor">15</span>
+          <span class="parte val">R$ 6.020,62</span>
+        </div>
+        <div class="linha" tabindex="0" aria-label="07/10 · 8 vendas · R$ 2.165,40 · média R$ 433,08">
+          <span class="rotulo dia">07/10</span>
+          <span class="trilha">
+            <span class="barra" style="width:9.0%"></span>
+            <span class="dica" role="tooltip">07/10 · 8 vendas · R$ 2.165,40 · média R$ 433,08</span>
+          </span>
+          <span class="valor">8</span>
+          <span class="parte val">R$ 2.165,40</span>
+        </div></div>
+      <details class="tabela">
+        <summary>Ver como tabela</summary>
+        <table>
+          <thead><tr><th>Dia</th><th class="n">Vendas</th>
+          <th class="n">Faturamento</th><th class="n">De anúncio</th></tr></thead>
+          <tbody><tr><td>05/10</td><td class="n">89</td><td class="n">R$ 36.409,80</td><td class="n">—</td></tr><tr><td>06/10</td><td class="n">15</td><td class="n">R$ 6.020,62</td><td class="n">—</td></tr><tr><td>07/10</td><td class="n">8</td><td class="n">R$ 2.165,40</td><td class="n">—</td></tr></tbody>
+        </table>
+      </details>
+    </section>
+    <section class="painel">
       <h2>Por onde conheceu a oferta</h2>
       <p class="nota">Primeiro contato da pessoa com o lançamento. É a resposta para “de onde veio a venda”.</p>
       <div class="grafico">
-        <div class="linha" tabindex="0" aria-label="WhatsApp clientes MED · 100 vendas · R$ 40.770,72 · média R$ 429,17 · 98,0% do total">
+        <div class="linha" tabindex="0" aria-label="WhatsApp clientes MED · 110 vendas · R$ 43.805,82 · média R$ 429,47 · 98,2% do total">
           <span class="rotulo">WhatsApp clientes MED</span>
           <span class="trilha">
             <span class="barra" style="width:100.0%;background:#1b2a20"></span>
-            <span class="dica" role="tooltip">WhatsApp clientes MED · 100 vendas · R$ 40.770,72 · média R$ 429,17 · 98,0% do total</span>
+            <span class="dica" role="tooltip">WhatsApp clientes MED · 110 vendas · R$ 43.805,82 · média R$ 429,47 · 98,2% do total</span>
           </span>
-          <span class="valor">100</span>
-          <span class="parte">98,0%</span>
+          <span class="valor">110</span>
+          <span class="parte">98,2%</span>
         </div>
-        <div class="linha" tabindex="0" aria-label="Sem origem · 2 vendas · R$ 790,00 · média R$ 395,00 · 2,0% do total">
+        <div class="linha" tabindex="0" aria-label="Sem origem · 2 vendas · R$ 790,00 · média R$ 395,00 · 1,8% do total">
           <span class="rotulo">Sem origem</span>
           <span class="trilha">
-            <span class="barra" style="width:2.0%;background:#334a30"></span>
-            <span class="dica" role="tooltip">Sem origem · 2 vendas · R$ 790,00 · média R$ 395,00 · 2,0% do total</span>
+            <span class="barra" style="width:1.8%;background:#334a30"></span>
+            <span class="dica" role="tooltip">Sem origem · 2 vendas · R$ 790,00 · média R$ 395,00 · 1,8% do total</span>
           </span>
           <span class="valor">2</span>
-          <span class="parte">2,0%</span>
+          <span class="parte">1,8%</span>
         </div></div>
       <details class="tabela">
         <summary>Ver como tabela</summary>
         <table>
           <thead><tr><th>Canal</th><th class="n">Vendas</th>
           <th class="n">Valor</th><th class="n">%</th></tr></thead>
-          <tbody><tr><td>WhatsApp clientes MED</td><td class="n">100</td><td class="n">R$ 40.770,72</td><td class="n">98,0%</td></tr><tr><td>Sem origem</td><td class="n">2</td><td class="n">R$ 790,00</td><td class="n">2,0%</td></tr></tbody>
-          <tfoot><tr><td>Total</td><td class="n">102</td>
-          <td class="n">R$ 41.560,72</td>
+          <tbody><tr><td>WhatsApp clientes MED</td><td class="n">110</td><td class="n">R$ 43.805,82</td><td class="n">98,2%</td></tr><tr><td>Sem origem</td><td class="n">2</td><td class="n">R$ 790,00</td><td class="n">1,8%</td></tr></tbody>
+          <tfoot><tr><td>Total</td><td class="n">112</td>
+          <td class="n">R$ 44.595,82</td>
           <td class="n">100,0%</td></tr></tfoot>
         </table>
       </details>
@@ -193,32 +245,32 @@
       <h2>Por onde entrou para comprar</h2>
       <p class="nota">O caminho da visita em que a compra aconteceu. “Abriu pelo link recebido” é quem clicou no link do disparo e comprou ali mesmo. Quando aparece um canal diferente do primeiro contato, é sinal de que a pessoa voltou por outro caminho antes de comprar.</p>
       <div class="grafico">
-        <div class="linha" tabindex="0" aria-label="Abriu pelo link recebido · 100 vendas · R$ 40.770,72 · média R$ 429,17 · 98,0% do total">
+        <div class="linha" tabindex="0" aria-label="Abriu pelo link recebido · 110 vendas · R$ 43.805,82 · média R$ 429,47 · 98,2% do total">
           <span class="rotulo">Abriu pelo link recebido</span>
           <span class="trilha">
             <span class="barra" style="width:100.0%;background:#1b2a20"></span>
-            <span class="dica" role="tooltip">Abriu pelo link recebido · 100 vendas · R$ 40.770,72 · média R$ 429,17 · 98,0% do total</span>
+            <span class="dica" role="tooltip">Abriu pelo link recebido · 110 vendas · R$ 43.805,82 · média R$ 429,47 · 98,2% do total</span>
           </span>
-          <span class="valor">100</span>
-          <span class="parte">98,0%</span>
+          <span class="valor">110</span>
+          <span class="parte">98,2%</span>
         </div>
-        <div class="linha" tabindex="0" aria-label="Sem origem · 2 vendas · R$ 790,00 · média R$ 395,00 · 2,0% do total">
+        <div class="linha" tabindex="0" aria-label="Sem origem · 2 vendas · R$ 790,00 · média R$ 395,00 · 1,8% do total">
           <span class="rotulo">Sem origem</span>
           <span class="trilha">
-            <span class="barra" style="width:2.0%;background:#334a30"></span>
-            <span class="dica" role="tooltip">Sem origem · 2 vendas · R$ 790,00 · média R$ 395,00 · 2,0% do total</span>
+            <span class="barra" style="width:1.8%;background:#334a30"></span>
+            <span class="dica" role="tooltip">Sem origem · 2 vendas · R$ 790,00 · média R$ 395,00 · 1,8% do total</span>
           </span>
           <span class="valor">2</span>
-          <span class="parte">2,0%</span>
+          <span class="parte">1,8%</span>
         </div></div>
       <details class="tabela">
         <summary>Ver como tabela</summary>
         <table>
           <thead><tr><th>Canal</th><th class="n">Vendas</th>
           <th class="n">Valor</th><th class="n">%</th></tr></thead>
-          <tbody><tr><td>Abriu pelo link recebido</td><td class="n">100</td><td class="n">R$ 40.770,72</td><td class="n">98,0%</td></tr><tr><td>Sem origem</td><td class="n">2</td><td class="n">R$ 790,00</td><td class="n">2,0%</td></tr></tbody>
-          <tfoot><tr><td>Total</td><td class="n">102</td>
-          <td class="n">R$ 41.560,72</td>
+          <tbody><tr><td>Abriu pelo link recebido</td><td class="n">110</td><td class="n">R$ 43.805,82</td><td class="n">98,2%</td></tr><tr><td>Sem origem</td><td class="n">2</td><td class="n">R$ 790,00</td><td class="n">1,8%</td></tr></tbody>
+          <tfoot><tr><td>Total</td><td class="n">112</td>
+          <td class="n">R$ 44.595,82</td>
           <td class="n">100,0%</td></tr></tfoot>
         </table>
       </details>
